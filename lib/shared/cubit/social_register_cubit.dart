@@ -40,6 +40,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates>
     required String email,
     required String phone,
     required String uId,
+
   })
   {
     UserModel model=UserModel

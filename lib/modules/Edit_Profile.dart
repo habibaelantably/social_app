@@ -1,4 +1,7 @@
 
+//import 'dart:html';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +16,16 @@ class editProfileScreen extends StatelessWidget
   @override
   Widget build(BuildContext context)
   {
-    var UserModel=SocialCubit.get(context).model;
-   // var profileImage=SocialCubit.get(context).profileImage;
+    var userModel=SocialCubit.get(context).model;
+    File? profileImage=SocialCubit.get(context).profileImage;
+
 
     return BlocConsumer<SocialCubit,SocialStates>(
       builder: (BuildContext context, state)
       {
+        nameController.text=userModel!.name!;
+        bioController.text=userModel.bio!;
+
         return Scaffold(
             appBar: deafultAppBar(
                 context: context,
@@ -52,7 +59,7 @@ class editProfileScreen extends StatelessWidget
                                     topRight: Radius.circular(10.0),
                                   ),
                                   image: DecorationImage(
-                                      image: NetworkImage('${UserModel!.cover}'),
+                                      image: NetworkImage('${userModel.cover}'),
                                       fit: BoxFit.cover
                                   )
                               ),
@@ -76,12 +83,15 @@ class editProfileScreen extends StatelessWidget
                             backgroundColor:Colors.white ,
                             child: CircleAvatar(
                               radius: 63.0,
-                              backgroundImage: NetworkImage('${UserModel.image}'),
+                              backgroundImage: profileImage==null ?NetworkImage('${userModel.image}')
+                                 : FileImage(profileImage) as ImageProvider,
 
                             ),
                           ),
                           IconButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                //SocialCubit.get(context).getProfileImage();
+                              },
                               icon: CircleAvatar(
                                   radius: 15.0,
                                   child:Icon(Icons.camera_alt_outlined)

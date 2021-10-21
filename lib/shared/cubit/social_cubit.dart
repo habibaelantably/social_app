@@ -1,6 +1,8 @@
 
 
-import 'dart:html';
+//import 'dart:html';
+import 'dart:io';
+
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +17,9 @@ import 'package:social_app/modules/feeds_screen.dart';
 import 'package:social_app/modules/settings_screen.dart';
 import 'package:social_app/modules/users_screen.dart';
 import 'package:social_app/shared/cubit/social_states.dart';
+//import 'package:cross_file/cross_file.dart';
+//import 'package:xfile/xfile.dart';
+
 
 class SocialCubit extends Cubit<SocialStates>
 {
@@ -76,19 +81,22 @@ class SocialCubit extends Cubit<SocialStates>
   
   File? profileImage;
   final picker=ImagePicker();
-  
-  Future<void>getProfileImage()async
+
+  Future<void> getProfileImage()async
   {
-    final  pickedFile=await picker.pickImage(source: ImageSource.gallery);
-    
-    if(pickedFile != null)
+    //final profileImage=await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile=await picker.pickImage(source: ImageSource.gallery) ;
+
+    if(profileImage != null)
     {
-      
+       profileImage=File(pickedFile.path);
+      //this.profileImage=imageProfile;
       emit(SocialPickProfileImageSuccessState());
     }else
       {
         print('no image picked');
         emit(SocialPickProfileImageErrorState());
+
       }
   }
 }

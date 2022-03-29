@@ -15,7 +15,7 @@ class SocialLayout extends StatelessWidget
       {
         if(state is SocialAddPostState)
         {
-          NavigateTo(context, AddPostsScreen());
+          NavigateTo(context, addPostsScreen());
         }
       },
       builder: (BuildContext context, Object? state)

@@ -3,8 +3,11 @@ import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/components/constants.dart';
 import 'package:social_app/components/reusable_components.dart';
 import 'package:social_app/layouts/Social_layout.dart';
+import 'package:social_app/network/local/cache_helper.dart';
+import 'package:social_app/shared/cubit/social_cubit.dart';
 import 'package:social_app/shared/cubit/social_register_cubit.dart';
 import 'package:social_app/shared/cubit/social_register_state.dart';
 
@@ -142,9 +145,19 @@ class RegisterScreen extends StatelessWidget
         },
         listener: (BuildContext context, Object? state)
         {
-          if(state is SocialSuccessRegisterState)
+          if(state is SocialSuccessCreateState)
           {
-            NavigateAndKill(context, SocialLayout());
+            CacheHelper.saveData
+              (
+                key: 'uId',
+                value: state.uId)
+                .then((value) {//احنا عملنا save ل الuid في ال cache بس ممليناش بيه بقا ال variable بتاعنا
+              if(value){
+                uId=CacheHelper.getData(key: 'uId');
+                SocialCubit.get(context).getUserdata();
+                NavigateAndKill(context, SocialLayout());
+              }
+            });
           }
           // {
           //   if(state.loginModel.status==true)

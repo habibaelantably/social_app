@@ -50,14 +50,14 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates>
         uId:uId,
         isEmailVerified:false,
         bio:'write your bio',
-        image:'https://labs.openheritage.eu/assets/decidim/default-avatar-43686fd5db4beed0141662a012321bbccd154ee1d9188b0d1f41e37b710af3cb.svg',
-        cover: 'https://labs.openheritage.eu/assets/decidim/default-avatar-43686fd5db4beed0141662a012321bbccd154ee1d9188b0d1f41e37b710af3cb.svg'
+        image:'https://media.istockphoto.com/photos/blue-open-sea-environmenttravel-and-nature-concept-picture-id1147989465?k=20&m=1147989465&s=612x612&w=0&h=nVI1UKhyr2WPZ5-gnFB3Q7jjToru4lg_ubBFx-Jomq0=',
+        cover: 'https://merriam-webster.com/assets/mw/images/gallery/gal-wap-slideshow-slide/onding-3320-6e61bc8bd8bc5a03b97984a30b1f1bc3@1x.jpg'
     );
 
     FirebaseFirestore.instance.collection('users').
     doc(uId).
     set(model.toMap()).then((value) {
-      emit(SocialSuccessCreateState());
+      emit(SocialSuccessCreateState(uId));
     }).catchError((error){
       emit(SocialErrorCreateState());
     });

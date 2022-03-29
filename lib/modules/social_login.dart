@@ -3,10 +3,12 @@ import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/components/constants.dart';
 import 'package:social_app/components/reusable_components.dart';
 import 'package:social_app/layouts/Social_layout.dart';
 import 'package:social_app/modules/social_register.dart';
 import 'package:social_app/network/local/cache_helper.dart';
+import 'package:social_app/shared/cubit/social_cubit.dart';
 import 'package:social_app/shared/cubit/social_login_cubit.dart';
 import 'package:social_app/shared/cubit/social_login_states.dart';
 
@@ -132,6 +134,8 @@ class LoginScreen extends StatelessWidget
                   value: state.uId)
                   .then((value) {
                 if(value){
+                  uId = CacheHelper.getData(key: 'uId');
+                  SocialCubit.get(context).getUserdata();
                   NavigateAndKill(context, SocialLayout());
                 }
               });

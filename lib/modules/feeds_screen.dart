@@ -1,55 +1,70 @@
 
+import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/components/reusable_components.dart';
+import 'package:social_app/models/PostModel.dart';
+import 'package:social_app/modules/comments_screen.dart';
+import 'package:social_app/shared/cubit/social_cubit.dart';
+import 'package:social_app/shared/cubit/social_states.dart';
 
 class FeedsScreen extends StatelessWidget
 {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children:[
-            Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              elevation: 4.0,
-              margin: EdgeInsets.all(8.0),
-              child:Stack(
-                alignment: AlignmentDirectional.bottomEnd,
-                children: [
-                  Image(
-                    image: NetworkImage('https://image.freepik.com/free-photo/happy-curly-haired-african-american-woman-laughs-positively-points-aside-copy-space-wears-black-t-shirt_273609-38585.jpg'),
-                    height:200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all( 7.0),
-                    child: Text('communicate with people',
-                    style:Theme.of(context).textTheme.subtitle1
-                    ),
-                  )
-                ],
-              )
+    return BlocConsumer<SocialCubit,SocialStates>(
+      builder: (BuildContext context, state)
+      {
+        return BuildCondition(
+          condition: SocialCubit.get(context).posts.length > 0 && SocialCubit.get(context).socialModel != null,
+          builder:(context)=> SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:[
+                Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 4.0,
+                    margin: EdgeInsets.all(8.0),
+                    child:Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        Image(
+                          image: NetworkImage('https://image.freepik.com/free-photo/wondered-curly-haired-woman-has-curious-excited-gaze-shows-product-empty-space-gives-advice-dressed-brown-sweatshirt-says-click-link-isolated-beige-wall_273609-37595.jpg?w=740'),
+                          height:200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all( 7.0),
+                          child: Text('communicate with people',
+                              style:Theme.of(context).textTheme.subtitle1
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context,index)=>postBuilder(SocialCubit.get(context).posts[index],context,index),
+                    separatorBuilder: (context,index)=>SizedBox(height: 10.0,),
+                    itemCount: SocialCubit.get(context).posts.length),
+                SizedBox(height: 10.0,)
+              ],
             ),
-           ListView.separated(
-               physics: NeverScrollableScrollPhysics(),
-               shrinkWrap: true,
-               itemBuilder: (context,index)=>postBuilder(context),
-               separatorBuilder: (context,index)=>SizedBox(height: 10.0,),
-               itemCount: 10),
-            SizedBox(height: 10.0,)
-          ],
-        ),
-      ),
+          ),
+          fallback:(context)=>Center(child: CircularProgressIndicator()) ,
+        );
+      },
+      listener: (BuildContext context, Object? state) {  },
+
     );
   }
 }
 
-Widget postBuilder(context)=>Card(
+Widget postBuilder(PostModel model,context,index)=>Card(
   clipBehavior: Clip.antiAliasWithSaveLayer,
   elevation: 5.0,
   margin: EdgeInsets.symmetric(
@@ -60,27 +75,31 @@ Widget postBuilder(context)=>Card(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         Row(
           children: [
             CircleAvatar(
               radius: 30.0,
-              backgroundImage: NetworkImage('https://image.freepik.com/free-photo/portrait-cute-happy-girl-smiling-touching-her-curly-red-hair_176420-9241.jpg'),
+              backgroundImage: NetworkImage('${model.userImage}'),
             ),
+            //SocialCubit.get(context).socialModel!.uId == model.uId?
+            //               NetworkImage('${SocialCubit.get(context).socialModel!.image}') && FileImage(profileImage) as ImageProvider
+            //                   :
             SizedBox(width: 5.0,),
             Expanded(
-              child: Column(
+              child: Column( 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Text('Habiba Gamal',
+                      Text('${model.name}',
                         //style: Theme.of(context).textTheme.bodyText1
                       ),
                       SizedBox(width: 5.0,),
                       Icon(Icons.check_circle,color: Colors.blue,size: 15.0,)
                     ],
                   ),
-                  Text('october 7,2021 at 12:00pm',
+                  Text('${model.dateTime}',
                       style: Theme.of(context).textTheme.caption!.copyWith(
                           color: Colors.grey,
                           height: 1.3
@@ -98,50 +117,53 @@ Widget postBuilder(context)=>Card(
           child: myDivider(),
         ),
         Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ultricies odio non libero molestie tristique. Nulla elementum, lectus sed rutrum euismod, nisl mauris faucibus nibh, vitae vehicula arcu ligula a augue',
+            '${model.postText}',
             style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                height: 1.2
+               // height: 1.2
             )),
-        Container(
-          width: double.infinity,
-          child: Wrap(
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.only(end:5.0),
-                child: MaterialButton(onPressed: (){},
-                  height: 20.0,
-                  minWidth: 1.0,
-                  padding: EdgeInsets.zero,
-                  child: Text('#software',
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                          color: Colors.blue
-                      )
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.only(end:5.0),
-                child: MaterialButton(onPressed: (){},
-                  height: 20.0,
-                  minWidth: 1.0,
-                  padding: EdgeInsets.zero,
-                  child: Text('#software',
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                          color: Colors.blue
-                      )
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+
+        if(model.postImage != '')
+        // Container(
+        //   width: double.infinity,
+        //   child: Wrap(
+        //     children: [
+        //       Padding(
+        //         padding: const EdgeInsetsDirectional.only(end:5.0),
+        //         child: MaterialButton(onPressed: (){},
+        //           height: 20.0,
+        //           minWidth: 1.0,
+        //           padding: EdgeInsets.zero,
+        //           child: Text('#software',
+        //               style: Theme.of(context).textTheme.caption!.copyWith(
+        //                   color: Colors.blue
+        //               )
+        //           ),
+        //         ),
+        //       ),
+        //
+        //       Padding(
+        //         padding: const EdgeInsetsDirectional.only(end:5.0),
+        //         child: MaterialButton(onPressed: (){},
+        //           height: 20.0,
+        //           minWidth: 1.0,
+        //           padding: EdgeInsets.zero,
+        //           child: Text('#software',
+        //               style: Theme.of(context).textTheme.caption!.copyWith(
+        //                   color: Colors.blue
+        //               )
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Container(
           height: 150,
           width:double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               image: DecorationImage(
-                  image: NetworkImage('https://image.freepik.com/free-photo/happy-curly-haired-african-american-woman-laughs-positively-points-aside-copy-space-wears-black-t-shirt_273609-38585.jpg'),
+                  image: NetworkImage('${model.postImage}'),
                   fit: BoxFit.cover
               )
           ),
@@ -156,7 +178,7 @@ Widget postBuilder(context)=>Card(
                     children: [
                       Icon(Icons.favorite_border,color: Colors.red,size: 20.0,),
                       SizedBox(width: 5.0,),
-                      Text('120',
+                      Text('${SocialCubit.get(context).likes[index]}',
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -174,7 +196,7 @@ Widget postBuilder(context)=>Card(
                     children: [
                       Icon(Icons.mode_comment_outlined,color: Colors.amberAccent,size: 20.0),
                       SizedBox(width: 5.0,),
-                      Text('30 comments',
+                      Text('0',
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -191,20 +213,31 @@ Widget postBuilder(context)=>Card(
           child: Row(
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 20.0,
-                      backgroundImage: NetworkImage('https://image.freepik.com/free-photo/portrait-cute-happy-girl-smiling-touching-her-curly-red-hair_176420-9241.jpg'),
-                    ),
-                    SizedBox(width: 5.0,),
-                    Text('write comment...',
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                            color: Colors.grey,
-                            height: 1.3
-                        )
-                    ),
-                  ],
+                child: InkWell(
+                  onTap: (){
+                    SocialCubit.get(context).comments=[];
+                    NavigateTo(
+                        context,
+                        AddComment(
+                            SocialCubit.get(context).postId[index],
+                            SocialCubit.get(context).socialModel));
+                    },
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20.0,
+                        backgroundImage: NetworkImage('${SocialCubit.get(context).socialModel!.image}'),
+                      ),
+                      SizedBox(width: 5.0,),
+                      Text(
+                          'write comment...',
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                              color: Colors.grey,
+                              height: 1.3
+                          )
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -223,7 +256,9 @@ Widget postBuilder(context)=>Card(
                             ),
                           ],
                         ),
-                        onTap: (){},
+                        onTap: (){
+                          SocialCubit.get(context).postLikes(SocialCubit.get(context).postId[index]);
+                        },
                       ),
                     ),
                     Expanded(

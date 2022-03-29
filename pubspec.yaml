@@ -36,16 +36,16 @@ dependencies:
   dio: ^4.0.0
   hexcolor: ^2.0.5
   shared_preferences: ^2.0.6
-  webview_flutter: ^2.0.12
-  dots_indicator: ^2.0.0
-  smooth_page_indicator: ^0.3.0-nullsafety.0
   fluttertoast:
-  carousel_slider: ^4.0.0
-  image_picker: ^0.8.4+3
+  image_picker: ^0.8.4+4
   #firebase
   firebase_core: ^1.7.0
   firebase_auth: ^3.1.3
-  cloud_firestore: ^2.5.3
+  cloud_firestore: ^2.5.4
+  firebase_storage: ^10.0.6
+  firebase_messaging: ^11.2.6
+  firebase_analytics: ^9.1.0
+
 
 dev_dependencies:
   flutter_test:

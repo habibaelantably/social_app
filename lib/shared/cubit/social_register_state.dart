@@ -10,7 +10,10 @@ class SocialSuccessRegisterState extends SocialRegisterStates{}
 
 class SocialErrorRegisterState extends SocialRegisterStates {}
 
-class SocialSuccessCreateState extends SocialRegisterStates{}
+class SocialSuccessCreateState extends SocialRegisterStates{
+  final String uId;
+  SocialSuccessCreateState(this.uId);
+}
 
 class SocialErrorCreateState extends SocialRegisterStates {}
 

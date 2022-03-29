@@ -15,7 +15,7 @@ class UserModel
     this.email,
     this.phone,
     this.uId,
-    this.image,
+    this.image, 
     this.cover,
     this.bio,
     this.isEmailVerified});
@@ -39,6 +39,7 @@ class UserModel
         'name':name,
         'email':email,
         'phone':phone,
+        'uId':uId,
         'image':image,
         'cover':cover,
         'bio':bio,

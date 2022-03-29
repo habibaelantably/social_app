@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/styles/colors.dart';
 
 
-Widget deafultFormField ({
+Widget    deafultFormField ({
   required TextEditingController controller,
   required TextInputType type,
   Function? Onsubmite,
@@ -80,7 +80,11 @@ PreferredSizeWidget deafultAppBar({
   String? title,
   List<Widget>?actions,
 })=>AppBar(
-  leading:IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios),),
+  leading:IconButton(
+    onPressed: (){
+    Navigator.pop(context);
+    },
+    icon: Icon(Icons.arrow_back_ios),),
 title: Text(title!),
   actions: actions
 );

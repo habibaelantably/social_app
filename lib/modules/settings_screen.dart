@@ -1,4 +1,5 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,10 +13,11 @@ class SettingsScreen extends StatelessWidget
   @override
   Widget build(BuildContext context) 
   {
-    var UserModel =SocialCubit.get(context).model;
     return BlocConsumer<SocialCubit,SocialStates>(
         builder: (context,index)
         {
+          var UserModel =SocialCubit.get(context).socialModel;
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -35,9 +37,9 @@ class SettingsScreen extends StatelessWidget
                                 topRight: Radius.circular(10.0),
                               ),
                               image: DecorationImage(
-                                  image: NetworkImage('${UserModel!.cover}'),
+                                image: NetworkImage('${UserModel!.cover}'),
                                   fit: BoxFit.cover
-                              )
+                               )
                           ),
                         ),
                         alignment: AlignmentDirectional.topCenter,
@@ -54,11 +56,12 @@ class SettingsScreen extends StatelessWidget
                     ],
                   ),
                 ),
+                SizedBox(height: 15.0),
                 Text(
                   '${UserModel.name}',
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
-                SizedBox(height: 15.0),
+                SizedBox(height: 10.0),
                 Text(
                   '${UserModel.bio}',
                   style: Theme.of(context).textTheme.caption!.copyWith(
@@ -134,9 +137,32 @@ class SettingsScreen extends StatelessWidget
                       (
                       onPressed: () { NavigateTo(context, editProfileScreen()); },
                       child: Icon(Icons.edit),
+
                     ),
+                   // OutlinedButton.icon(onPressed: (){}, icon: Icon(Icons.search), label: Text('google'))
+
                   ],
                 ),
+                Row(
+                  children: [
+                    OutlinedButton(onPressed: (){
+                      FirebaseMessaging.instance.subscribeToTopic('announcement');
+                    }, child: Text('subscribe')),
+
+                    SizedBox(width: 8.0,),
+
+                    OutlinedButton(onPressed: (){
+                      FirebaseMessaging.instance.unsubscribeFromTopic('announcement');
+                    }, child: Text('unsubscribe')),
+
+                    Spacer(),
+
+                    OutlinedButton(onPressed: (){
+
+                     SocialCubit.get(context).logOut(context);
+                    }, child: Icon(Icons.logout)),
+                  ],
+                )
 
               ],
             ),
@@ -144,7 +170,6 @@ class SettingsScreen extends StatelessWidget
         },
         listener:(context,index)
         {
-
         }
         );
   }
